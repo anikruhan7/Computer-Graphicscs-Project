@@ -1,6 +1,5 @@
 #include "Background.h"
 #include <math.h>
-
 using namespace std;
 
 // Initialize variables
@@ -8,7 +7,7 @@ bool isDay = true;
 float cloudX = -0.8f;
 float sunY = 0.75f;
 
-// Helper function to draw circles
+//  Function for draw circle
 void drawCircle(float cx, float cy, float r, int segments, float red, float green, float blue)
 {
     glColor3f(red, green, blue);
@@ -25,7 +24,7 @@ void drawCircle(float cx, float cy, float r, int segments, float red, float gree
 
 void Background::draw()
 {
-    // 1. Sky Color
+    // Sky Color
     if (isDay)
         glColor3f(0.53f, 0.81f, 0.98f);
     else
@@ -38,7 +37,7 @@ void Background::draw()
     glVertex2f(-1.0f, -0.2f);
     glEnd();
 
-    // 2. Sun/Moon/Clouds
+    // Sun/Moon/Clouds
     if (isDay)
     {
         drawCircle(0.0f, sunY, 0.1f, 50, 1.0f, 0.84f, 0.0f); // Sun
@@ -54,32 +53,25 @@ void Background::draw()
         drawCircle(0.04f, 0.77f, 0.1f, 40, 0.05f, 0.05f, 0.2f);
     }
 
-    // 3. Ground
+    // Ground
     glColor3f(0.0f, 0.55f, 0.0f); // Green Color
     glBegin(GL_POLYGON);
 
     // Top Left point (Controls the height)
     glVertex2f(-1.0f, -0.1f);
-
     // Top Right point (Controls the height)
     glVertex2f(1.0f, -0.1f);
-
     // Bottom Right
     glVertex2f(1.0f, -1.0f);
-
     // Bottom Left
     glVertex2f(-1.0f, -1.0f);
-
     glEnd();
 
-    // --- POND (EXTENDED UPPER) ---
+    // POND
     glColor3f(0.2f, 0.6f, 0.9f); // Blue water
     glBegin(GL_POLYGON);
-
-    // CHANGED: Top Y moved up from -0.22f to -0.12f
     glVertex2f(-0.95f, -0.12f); // Top-Left
     glVertex2f(-0.35f, -0.12f); // Top-Right
-
     glVertex2f(-0.35f, -0.39f); // Bottom-Right
     glVertex2f(-0.95f, -0.39f); // Bottom-Left
     glEnd();
@@ -88,14 +80,13 @@ void Background::draw()
     glColor3f(0.15f, 0.5f, 0.8f);
     glLineWidth(2.0f);
     glBegin(GL_LINE_LOOP);
-    // CHANGED: Top Y moved up here too
     glVertex2f(-0.95f, -0.12f);
     glVertex2f(-0.35f, -0.12f);
     glVertex2f(-0.35f, -0.39f);
     glVertex2f(-0.95f, -0.39f);
     glEnd();
 
-    // 4. Road
+    // ROAD
     glColor3f(0.3f, 0.3f, 0.3f);
     glBegin(GL_POLYGON);
     glVertex2f(-1.0f, -0.40f);
@@ -104,7 +95,7 @@ void Background::draw()
     glVertex2f(-1.0f, -0.90f);
     glEnd();
 
-    // --- RESTORED ROAD LINES ---
+    // ROAD LINES
     glColor3f(1.0f, 1.0f, 1.0f);
     glLineWidth(2.0f);
     glBegin(GL_LINES);

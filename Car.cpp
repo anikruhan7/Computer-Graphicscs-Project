@@ -1,4 +1,3 @@
-// Car.cpp
 #include "Car.h"
 #include <math.h>
 using namespace std;
@@ -46,7 +45,7 @@ void Car::draw()
     }
     glEnd();
 
-    // Wheel hubs
+    // Wheel Hubs
     glColor3f(0.7f, 0.7f, 0.7f);
     glBegin(GL_POLYGON);
     for (int i = 0; i < 20; i++)

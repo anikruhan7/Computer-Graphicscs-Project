@@ -1,4 +1,3 @@
-// House.cpp
 #include "House.h"
 using namespace std;
 

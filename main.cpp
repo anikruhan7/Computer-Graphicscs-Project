@@ -1,16 +1,11 @@
 #define GL_SILENCE_DEPRECATION
-
 #include <GLUT/glut.h>
 #include <stdlib.h>
 #include "Scene.h"
-
 using namespace std;
-
 Scene *village = nullptr;
 
-// --- ZOOM VARIABLES ---
-// 1.732f is the exact math magic number (1.0 / tan(30))
-// to make the 3D view match your original -1 to 1 coordinates perfectly.
+// Camera Zoom
 float defaultZoom = 1.732f;
 float zoom = defaultZoom;
 
@@ -20,13 +15,13 @@ float centerY = 0.0f;
 
 void display()
 {
-    // Clear buffers
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // --- CAMERA SETUP ---
+    // CAMERA SETUP
     // Eye(x,y,z), Center(x,y,z), Up(0,1,0)
     gluLookAt(centerX, centerY, zoom,
               centerX, centerY, 0.0,
@@ -42,16 +37,9 @@ void reshape(int w, int h)
 {
     // 1. Set Viewport to fill the entire window
     glViewport(0, 0, w, h);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
-    // 2. FORCE ASPECT RATIO TO 1.0
-    // We use '1.0' instead of '(float)w/h'.
-    // This replicates your original code's behavior of stretching
-    // the -1 to 1 coordinates to fill the whole window, preventing gaps on the sides.
     gluPerspective(60.0, 1.0, 0.1, 100.0);
-
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -68,7 +56,7 @@ void keyboard(unsigned char key, int, int)
 {
     switch (key)
     {
-    // --- ZOOM CONTROLS ---
+    // ZOOM CONTROLS
     case 'z':
         // Zoom In
         zoom -= 0.1f;
@@ -83,13 +71,13 @@ void keyboard(unsigned char key, int, int)
 
     case 'o':
     case 'O':
-        // RESET to Original Position (Fit to Window)
+        // RESET to Original Position
         zoom = defaultZoom;
         centerX = 0.0f;
         centerY = 0.0f;
         break;
 
-    // --- ORIGINAL CONTROLS ---
+    // ORIGINAL CONTROLS
     case ' ':
         village->togglePause();
         break;
@@ -112,8 +100,7 @@ void keyboard(unsigned char key, int, int)
     }
     glutPostRedisplay();
 }
-
-// Optional: Arrow Keys for Panning (Move Left/Right/Up/Down)
+// Arrows
 void specialKeys(int key, int x, int y)
 {
     switch (key)

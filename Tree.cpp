@@ -1,9 +1,7 @@
-// Tree.cpp
 #include "Tree.h"
 using namespace std;
 
 extern bool isDay;
-
 Tree::Tree(float px, float py, float s) : x(px), y(py), scale(s) {}
 
 NormalTree::NormalTree(float px, float py, float s) : Tree(px, py, s) {}

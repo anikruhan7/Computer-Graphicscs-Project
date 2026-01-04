@@ -1,7 +1,7 @@
 #include "Bird.h"
 #include <math.h>
 
-extern bool isDay; // We only want birds to appear during the day
+extern bool isDay; // birds to appear during the day
 
 Bird::Bird(float startX, float startY, float s)
     : x(startX), y(startY), speed(s) {}
@@ -36,7 +36,5 @@ void Bird::update()
     if (x > 1.2f)
     {
         x = -1.2f;
-        // Optional: Randomize Y slightly when respawning
-        // y = 0.5f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/0.3f));
     }
 }

@@ -1,7 +1,6 @@
 #include "TrafficLight.h"
 #include <GLUT/glut.h> // MacOS
-#include <math.h>      // Required for cosf/sinf
-
+#include <math.h>
 extern bool greenLight;
 
 void drawCircleTL(float cx, float cy, float r, int segments, float red, float green, float blue)
@@ -21,8 +20,6 @@ void drawCircleTL(float cx, float cy, float r, int segments, float red, float gr
 void TrafficLight::draw()
 {
     glPushMatrix();
-
-    // CHANGED: 0.95f is "Right Side" but still visible (was 1.25f)
     glTranslatef(0.95f, -0.1f, 0.0f);
 
     // Pole
@@ -46,10 +43,8 @@ void TrafficLight::draw()
     // Lights
     float redIntensity = greenLight ? 0.3f : 1.0f;
     float greenIntensity = greenLight ? 1.0f : 0.3f;
-
     drawCircleTL(0.0f, 0.31f, 0.025f, 20, redIntensity, 0.0f, 0.0f);   // Red
     drawCircleTL(0.0f, 0.24f, 0.025f, 20, 0.0f, greenIntensity, 0.0f); // Green
-
     glPopMatrix();
 }
 

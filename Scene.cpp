@@ -37,21 +37,19 @@ Scene::Scene()
     objects.push_back(new HouseType2(0.55f, -0.25f));
     objects.push_back(new TrafficLight());
 
-    // ================== TRAFFIC ==================
+    // TRAFFIC
 
-    // --- TOP LANE (Moving Right ->) ---
+    // TOP LANE - Moving Right
     // 1 Bus + 2 Cars
-    objects.push_back(new Bus(0.6f, -0.55f, 1.0f));                    // 1. Bus
-    objects.push_back(new Car(0.0f, -0.55f, 1.0f, 0.0f, 0.0f, 1.0f));  // 2. Red Car
-    objects.push_back(new Car(-0.5f, -0.55f, 0.0f, 1.0f, 0.0f, 1.0f)); // 3. Green Car
-    // Removed Blue Car
+    objects.push_back(new Bus(0.6f, -0.55f, 1.0f));                    // Bus
+    objects.push_back(new Car(0.0f, -0.55f, 1.0f, 0.0f, 0.0f, 1.0f));  // Red Car
+    objects.push_back(new Car(-0.5f, -0.55f, 0.0f, 1.0f, 0.0f, 1.0f)); // Green Car
 
-    // --- BOTTOM LANE (Moving Left <-) ---
+    // BOTTOM LANE-Moving Left
     // 1 Bus + 2 Cars
-    objects.push_back(new Bus(-0.6f, -0.80f, -1.0f));                  // 1. Bus
-    objects.push_back(new Car(0.0f, -0.80f, 0.0f, 1.0f, 1.0f, -1.0f)); // 2. Cyan Car
-    objects.push_back(new Car(0.5f, -0.80f, 1.0f, 0.5f, 0.0f, -1.0f)); // 3. Orange Car
-    // Removed Purple Car
+    objects.push_back(new Bus(-0.6f, -0.80f, -1.0f));                  //  Bus
+    objects.push_back(new Car(0.0f, -0.80f, 0.0f, 1.0f, 1.0f, -1.0f)); //  Cyan Car
+    objects.push_back(new Car(0.5f, -0.80f, 1.0f, 0.5f, 0.0f, -1.0f)); // Orange Car
 }
 
 Scene::~Scene()
