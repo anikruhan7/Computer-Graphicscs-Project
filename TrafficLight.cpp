@@ -1,5 +1,5 @@
 #include "TrafficLight.h"
-#include <GLUT/glut.h> // MacOS
+#include <GL/glut.h> // MacOS
 #include <math.h>
 extern bool greenLight;
 

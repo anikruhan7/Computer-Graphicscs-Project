@@ -1,7 +1,8 @@
 #define GL_SILENCE_DEPRECATION
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include <stdlib.h>
 #include "Scene.h"
+
 using namespace std;
 Scene *village = nullptr;
 

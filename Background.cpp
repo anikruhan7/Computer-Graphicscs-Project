@@ -1,11 +1,85 @@
 #include "Background.h"
 #include <math.h>
+#include <vector>
+#include <cstdlib>
+#include <cmath>
 using namespace std;
 
 // Initialize variables
 bool isDay = true;
 float cloudX = -0.8f;
 float sunY = 0.75f;
+
+// Stars for the night sky (positions, sizes and twinkle phase)
+static std::vector<std::pair<float, float>> stars;
+static std::vector<float> starSizes;
+static float starPhase = 0.0f;
+
+// Shooting star structure and pool
+struct ShootingStar
+{
+    float x, y;
+    float vx, vy;
+    int life;
+    int maxLife;
+    bool active;
+};
+static std::vector<ShootingStar> shootingStars;
+// Number of frames after startup during which shooting stars spawn frequently
+static int shootingStartupFrames = 300; // ~5 seconds at 60 FPS
+
+
+// Populate stars once with deterministic seed so layout is stable
+static void initStars()
+{
+    if (!stars.empty())
+        return;
+    srand(12345);
+    const int count = 40;
+    for (int i = 0; i < count; ++i)
+    {
+        float x = -1.0f + 2.0f * (rand() / (float)RAND_MAX);
+        float y = 0.2f + 0.8f * (rand() / (float)RAND_MAX); // upper sky region
+        stars.emplace_back(x, y);
+        starSizes.push_back(0.002f + 0.012f * (rand() / (float)RAND_MAX));
+    }
+
+    // Initialize shooting star pool (inactive)
+    shootingStars.resize(6);
+    for (auto &s : shootingStars)
+    {
+        s.active = false;
+        s.life = 0;
+        s.maxLife = 0;
+        s.x = s.y = s.vx = s.vy = 0.0f;
+    }
+}
+
+// Spawn a shooting star into an inactive slot
+static void spawnShootingStar()
+{
+    if (shootingStars.empty())
+        initStars();
+
+    // Find inactive slot
+    for (auto &s : shootingStars)
+    {
+        if (!s.active)
+        {
+            // start near top-right region so it crosses the sky
+            float rx = 0.4f + 0.6f * (rand() / (float)RAND_MAX); // 0.4..1.0
+            float ry = 0.6f + 0.4f * (rand() / (float)RAND_MAX); // 0.6..1.0
+            s.x = rx;
+            s.y = ry;
+            s.vx = -0.008f - 0.015f * (rand() / (float)RAND_MAX); // leftwards
+            s.vy = -0.004f - 0.01f * (rand() / (float)RAND_MAX);  // slightly downwards
+            s.life = 0;
+            s.maxLife = 40 + (int)(80 * (rand() / (float)RAND_MAX));
+            s.active = true;
+            break;
+        }
+    }
+}
 
 //  Function for draw circle
 void drawCircle(float cx, float cy, float r, int segments, float red, float green, float blue)
@@ -51,6 +125,51 @@ void Background::draw()
     {
         drawCircle(0.0f, 0.75f, 0.1f, 40, 0.9f, 0.9f, 0.9f); // Moon
         drawCircle(0.04f, 0.77f, 0.1f, 40, 0.05f, 0.05f, 0.2f);
+
+        // Stars
+        initStars();
+        for (size_t i = 0; i < stars.size(); ++i)
+        {
+            float sx = stars[i].first;
+            float sy = stars[i].second;
+            float baseR = starSizes[i];
+            float twinkle = 0.6f + 0.4f * (0.5f + 0.5f * sinf(starPhase * 1.5f + (float)i * 0.7f));
+            float sr = baseR * (0.8f + 0.6f * twinkle);
+            float brightness = 0.6f + 0.4f * twinkle;
+            drawCircle(sx, sy, sr, 10, brightness, brightness, brightness);
+        }
+
+        // Shooting stars (lines that move and fade)
+        for (auto &s : shootingStars)
+        {
+            if (!s.active)
+                continue;
+
+            float alpha = 1.0f - (s.life / (float)s.maxLife);
+            // trail length depends on velocity (slightly longer for nicer look)
+            float tx = s.x - s.vx * 4.0f;
+            float ty = s.y - s.vy * 4.0f;
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            glLineWidth(2.5f);
+            // soft yellow color
+            glColor4f(1.0f, 0.95f, 0.6f, 0.9f * alpha);
+            glBegin(GL_LINES);
+            glVertex2f(tx, ty);
+            glVertex2f(s.x, s.y);
+            glEnd();
+
+            // small bright head (soft yellow)
+            glPointSize(4.0f);
+            glBegin(GL_POINTS);
+            glColor4f(1.0f, 0.95f, 0.6f, 1.0f * alpha);
+            glVertex2f(s.x, s.y);
+            glEnd();
+
+            glDisable(GL_BLEND);
+        }
     }
 
     // Ground
@@ -112,11 +231,38 @@ void Background::update()
     if (!isDay)
     {
         sunY = 0.5f;
-        return;
+        // Spawn more frequently during startup, then use base rate
+        float baseProb = 0.006f;
+        float startupProb = 0.08f; // ~8% chance per frame at startup
+        float prob = (shootingStartupFrames > 0) ? startupProb : baseProb;
+        if ((rand() / (float)RAND_MAX) < prob)
+            spawnShootingStar();
+        if (shootingStartupFrames > 0)
+            shootingStartupFrames--;
     }
-    cloudX += 0.003f;
-    if (cloudX > 1.3f)
-        cloudX = -1.3f;
-    if (sunY < 0.85f)
-        sunY += 0.0005f;
+    else
+    {
+        cloudX += 0.003f;
+        if (cloudX > 1.3f)
+            cloudX = -1.3f;
+        if (sunY < 0.85f)
+            sunY += 0.0005f;
+    }
+
+    // Update shooting stars
+    for (auto &s : shootingStars)
+    {
+        if (!s.active)
+            continue;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life++;
+        if (s.life > s.maxLife || s.x < -1.2f || s.y < -0.2f)
+            s.active = false;
+    }
+
+    // Progress star phase for twinkling effect
+    starPhase += 0.05f;
+    if (starPhase > 10000.0f)
+        starPhase = 0.0f;
 }

@@ -4,14 +4,13 @@
 // Section = L
 
 #define GL_SILENCE_DEPRECATION
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include <math.h>
 
-void display()
+// Draw the village onto the current OpenGL context (does NOT clear the buffer)
+void drawVillageScene()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Sky //
+    // Sky
     glColor3f(0.53f, 0.81f, 0.98f);
     glBegin(GL_POLYGON);
     glVertex2f(-1.0f, 1.0f);
@@ -20,7 +19,7 @@ void display()
     glVertex2f(-1.0f, -0.2f);
     glEnd();
 
-    // Ground //
+    // Ground
     glColor3f(0.0, 0.55, 0.0);
     glBegin(GL_POLYGON);
     glVertex2f(-1.0f, -0.2f);
@@ -29,7 +28,7 @@ void display()
     glVertex2f(-1.0f, -1.0f);
     glEnd();
 
-    // Road //
+    // Road
     glColor3f(0.3f, 0.3f, 0.3f);
     glBegin(GL_POLYGON);
     glVertex2f(-1.0f, -0.45f);
@@ -46,21 +45,21 @@ void display()
     }
     glEnd();
 
-    // Sun //
+    // Sun
     glColor3f(1.0f, 0.84f, 0.0f);
     float r = 0.1f;
-    int segments = 100;
+    int segments = 40;
     glBegin(GL_POLYGON);
     for (int i = 0; i <= segments; i++)
     {
-        float angle = 2 * M_PI * i / segments;
-        float x = r * cos(angle);
-        float y = r * sin(angle);
-        glVertex2f(x + 0.0f, y + 0.8f);
+        float angle = 2.0f * 3.1415926f * i / segments;
+        float sx = r * cosf(angle);
+        float sy = r * sinf(angle);
+        glVertex2f(sx + 0.0f, sy + 0.8f);
     }
     glEnd();
 
-    // Left
+    // Trees (left, middle, right)
     glColor3f(0.5f, 0.2f, 0.1f);
     glBegin(GL_POLYGON);
     glVertex2f(-0.85f, -0.25f);
@@ -75,7 +74,6 @@ void display()
     glVertex2f(-0.825f, 0.32f);
     glEnd();
 
-    // Middle
     glColor3f(0.5f, 0.2f, 0.1f);
     glBegin(GL_POLYGON);
     glVertex2f(-0.55f, -0.25f);
@@ -87,10 +85,9 @@ void display()
     glBegin(GL_TRIANGLES);
     glVertex2f(-0.60f, 0.12f);
     glVertex2f(-0.45f, 0.12f);
-    glVertex2f(-0.525f, 0.28);
+    glVertex2f(-0.525f, 0.28f);
     glEnd();
 
-    // Right
     glColor3f(0.5f, 0.2f, 0.1f);
     glBegin(GL_POLYGON);
     glVertex2f(0.00f, -0.25f);
@@ -105,7 +102,7 @@ void display()
     glVertex2f(0.025f, 0.30f);
     glEnd();
 
-    // House//
+    // House
     glColor3f(0.95f, 0.87f, 0.72f);
     glBegin(GL_POLYGON);
     glVertex2f(0.3f, -0.22f);
@@ -129,7 +126,7 @@ void display()
     glVertex2f(0.45f, 0.3f);
     glEnd();
 
-    // Windows//
+    // Windows
     glColor3f(0.3f, 0.5f, 1.0f);
     glBegin(GL_POLYGON);
     glVertex2f(0.340f, -0.090f);
@@ -145,7 +142,7 @@ void display()
     glVertex2f(0.514f, -0.025f);
     glEnd();
 
-    // Door//
+    // Door
     glColor3f(0.55f, 0.27f, 0.07f);
     glBegin(GL_POLYGON);
     glVertex2f(0.42f, 0.001f);
@@ -153,7 +150,18 @@ void display()
     glVertex2f(0.48f, -0.18f);
     glVertex2f(0.42f, -0.18f);
     glEnd();
+}
 
+// If you want to build this file as a standalone demo (not part of the larger project),
+// define VILLAGE_STANDALONE when compiling (e.g. -DVILLAGE_STANDALONE). That will
+// enable the original main/display and keep the file safe to compile together
+// with the rest of the project.
+#ifdef VILLAGE_STANDALONE
+
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawVillageScene();
     glFlush();
 }
 
@@ -167,5 +175,4 @@ int main(int argc, char **argv)
     glutMainLoop();
     return 0;
 }
-
-// using VS Code MacOS using command : clang++ main.cpp -std=c++17 -framework OpenGL -framework GLUT -DGL_SILENCE_DEPRECATION -o main && ./main
+#endif
