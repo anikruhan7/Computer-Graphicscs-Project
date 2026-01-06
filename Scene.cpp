@@ -30,9 +30,18 @@ Scene::Scene()
     objects.push_back(new Bird(0.2f, 0.88f, 0.005f));
 
     // Scenery
-    objects.push_back(new NormalTree(-0.92f, -0.22f, 0.7f));
+
+    objects.push_back(new NormalTree(-0.92f, -0.1f, 0.4f));
+    objects.push_back(new NormalTree(-0.85f, -0.1f, 0.3f));
+    // Added more small trees on the left side
+    objects.push_back(new SlimTree(-0.95f, -0.1f, 0.8f));
+    objects.push_back(new NormalTree(-0.80f, -0.1f, 0.2f));
     objects.push_back(new SlimTree(-0.3f, -0.22f, 1.0f));
+    // Added medium and large trees near the houses and to the right
+    objects.push_back(new NormalTree(-0.2f, -0.22f, 0.6f));
     objects.push_back(new NormalTree(0.35f, -0.22f, 1.2f));
+    objects.push_back(new SlimTree(0.7f, -0.2f, 1.1f));
+    objects.push_back(new NormalTree(0.9f, -0.15f, 0.9f));
     objects.push_back(new HouseType1(0.0f, -0.25f));
     objects.push_back(new HouseType2(0.55f, -0.25f));
     objects.push_back(new TrafficLight());
