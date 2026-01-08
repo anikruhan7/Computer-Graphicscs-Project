@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+
+# Binaries
+*.o
+*.exe
+village
+
+# Media
+*.wav
+*.mp3
+
