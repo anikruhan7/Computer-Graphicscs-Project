@@ -50,6 +50,8 @@ Users can interact with the simulation through sound effects, simulation control
 
 5. User Interaction Controls
 The following keyboard controls are implemented in the simulation:
+
+- Press `c` to toggle between **Village** and **City** scenes (city has skyscrapers, more cars, a plane, and a river with passing ships).
 Z / z: Zoom in and zoom out
 D: Switch to Day mode
 N: Switch to Night mode

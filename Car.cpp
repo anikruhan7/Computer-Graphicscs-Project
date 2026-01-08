@@ -1,4 +1,5 @@
 #include "Car.h"
+#include "Background.h"
 #include <math.h>
 using namespace std;
 extern bool isMoving;
@@ -61,6 +62,68 @@ void Car::draw()
         glVertex2f(x + 0.19f + 0.015f * cosf(theta), y + 0.015f * sinf(theta));
     }
     glEnd();
+
+    // Night lights: headlights and taillights when it's night
+    if (!isDay)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Headlight (yellow) - triangle projecting forward a bit
+        glColor4f(1.0f, 0.95f, 0.6f, 0.95f);
+        glBegin(GL_TRIANGLES);
+        if (direction > 0)
+        {
+            glVertex2f(x + 0.25f, y + 0.05f);
+            glVertex2f(x + 0.45f, y + 0.02f);
+            glVertex2f(x + 0.45f, y + 0.08f);
+        }
+        else
+        {
+            glVertex2f(x, y + 0.05f);
+            glVertex2f(x - 0.20f, y + 0.02f);
+            glVertex2f(x - 0.20f, y + 0.08f);
+        }
+        glEnd();
+
+        // Soft beam on road (very faint)
+        glColor4f(1.0f, 0.95f, 0.6f, 0.15f);
+        glBegin(GL_TRIANGLES);
+        if (direction > 0)
+        {
+            glVertex2f(x + 0.30f, y + 0.03f);
+            glVertex2f(x + 0.85f, -0.94f);
+            glVertex2f(x + 0.30f, -0.94f);
+        }
+        else
+        {
+            glVertex2f(x - 0.05f, y + 0.03f);
+            glVertex2f(x - 0.60f, -0.94f);
+            glVertex2f(x - 0.05f, -0.94f);
+        }
+        glEnd();
+
+        // Taillights (red)
+        glColor4f(0.9f, 0.12f, 0.12f, 1.0f);
+        glBegin(GL_POLYGON);
+        if (direction > 0)
+        {
+            glVertex2f(x - 0.01f, y + 0.01f);
+            glVertex2f(x + 0.02f, y + 0.01f);
+            glVertex2f(x + 0.02f, y + 0.04f);
+            glVertex2f(x - 0.01f, y + 0.04f);
+        }
+        else
+        {
+            glVertex2f(x + 0.23f, y + 0.01f);
+            glVertex2f(x + 0.26f, y + 0.01f);
+            glVertex2f(x + 0.26f, y + 0.04f);
+            glVertex2f(x + 0.23f, y + 0.04f);
+        }
+        glEnd();
+
+        glDisable(GL_BLEND);
+    }
 }
 
 void Car::update()
