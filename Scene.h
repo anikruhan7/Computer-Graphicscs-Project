@@ -6,8 +6,17 @@
 
 class Scene
 {
+public:
+    enum Mode { VILLAGE, CITY };
+
 private:
     std::vector<GameObject *> objects;
+    Mode currentMode = VILLAGE;
+
+    // Helpers to build scene variants
+    void clearObjects();
+    void createVillage();
+    void createCity();
 
 public:
     Scene();
@@ -15,8 +24,13 @@ public:
     void render();
     void updateAll();
     void togglePause();
-    void setDay(bool status); // <--- CHANGED: Logic for D/N keys
+    void setDay(bool status);
     void playHorn();
+
+    // Mode control
+    void setMode(Mode m);
+    void toggleMode();
+    Mode getMode() const { return currentMode; }
 };
 
 #endif

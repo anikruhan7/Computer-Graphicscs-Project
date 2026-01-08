@@ -94,6 +94,17 @@ void keyboard(unsigned char key, int, int)
     case 'H':
         village->playHorn();
         break;
+
+    // Toggle between Village and City scenes
+    case 'c':
+    case 'C':
+        village->toggleMode();
+        if (village->getMode() == Scene::CITY)
+            glutSetWindowTitle("City - Press 'c' to go to Village");
+        else
+            glutSetWindowTitle("Village - Zoom (z/Z) & Reset (O)");
+        break;
+
     case 27: // ESC key
         system("pkill afplay");
         exit(0);
